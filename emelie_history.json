@@ -1,0 +1,50 @@
+[
+  {
+    "role": "user",
+    "content": "kan du bygga en game engine? "
+  },
+  {
+    "role": "user",
+    "content": "kan du bygga en game engine? "
+  },
+  {
+    "role": "user",
+    "content": "hej"
+  },
+  {
+    "role": "user",
+    "content": "hej"
+  },
+  {
+    "role": "assistant",
+    "content": "Hej! Vad kul att höra från dig! 😊 Hur är det idag?"
+  },
+  {
+    "role": "user",
+    "content": "det är bara bra! kan du sätta på rammstein på spotify med Du hast"
+  },
+  {
+    "role": "user",
+    "content": "kan du starta spotify"
+  },
+  {
+    "role": "assistant",
+    "content": "Spelar på Spotify: Rammstein Du Hast"
+  },
+  {
+    "role": "user",
+    "content": "hej hur mår du?"
+  },
+  {
+    "role": "assistant",
+    "content": "Jag mår jättebra, tack som frågar! 😊 Och du, hur mår du idag?"
+  },
+  {
+    "role": "user",
+    "content": "Det är bara bra här, kan du spela engel med rammstein på spotify?"
+  },
+  {
+    "role": "assistant",
+    "content": "Spelar på Spotify: Rammstein Engel"
+  }
+]

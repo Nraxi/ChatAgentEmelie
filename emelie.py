@@ -569,16 +569,18 @@ def youtube_open(query):
 # ---------------- SPOTIFY ----------------
 
 def spotify_play(query):
-    # försök hitta artistsida via DDG
     try:
         with DDGS() as ddgs:
-            results = list(ddgs.text(f"{query} site:open.spotify.com/artist", max_results=5))
+            results = list(ddgs.text(f"{query} site:open.spotify.com/track", max_results=5))
+
         for r in results:
             href = r.get("href", "")
-            if "open.spotify.com/artist/" in href:
-                artist_id = href.split("/artist/")[1].split("?")[0].split("/")[0]
-                uri = f"spotify:artist:{artist_id}"
+            if "open.spotify.com/track/" in href:
+                track_id = href.split("/track/")[1].split("?")[0].split("/")[0]
+                uri = f"spotify:track:{track_id}"
+
                 print(f"   🎵 URI: {uri}")
+
                 script = f'''
                 tell application "Spotify"
                     play track "{uri}"
@@ -586,9 +588,11 @@ def spotify_play(query):
                 '''
                 subprocess.run(["osascript", "-e", script])
                 return
+
     except Exception:
         pass
-    # fallback: öppna Spotify-sökning i webbläsaren
+
+    # fallback
     encoded = requests.utils.quote(query)
     subprocess.run(["open", f"https://open.spotify.com/search/{encoded}"])
 
