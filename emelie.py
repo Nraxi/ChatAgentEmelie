@@ -30,7 +30,7 @@ MODEL_NAME    = "gemma4:e4b"
 AGENT_NAME    = "Emelie"
 chat_history  = []
 current_project = {"path": None}  # aktivt VS Code-projekt
-
+current_track = {"query": None, "uri": None}
 HISTORY_FILE  = "emelie_history.json"
 CACHE_FILE    = "emelie_cache.json"
 CACHE_TTL_H   = 24
@@ -569,6 +569,7 @@ def youtube_open(query):
 # ---------------- SPOTIFY ----------------
 
 def spotify_play(query):
+    global current_track
     try:
         with DDGS() as ddgs:
             results = list(ddgs.text(f"{query} site:open.spotify.com/track", max_results=5))
@@ -578,6 +579,8 @@ def spotify_play(query):
             if "open.spotify.com/track/" in href:
                 track_id = href.split("/track/")[1].split("?")[0].split("/")[0]
                 uri = f"spotify:track:{track_id}"
+                current_track["query"] = query
+                current_track["uri"] = uri
 
                 print(f"   🎵 URI: {uri}")
 
@@ -716,10 +719,10 @@ def start_emelie():
                     lines = "\n".join(f"  {i+1}. {m['content']}" for i, m in enumerate(prev))
                     reply = f"Såhär ser vår tidigare konversation ut ({len(prev)} meddelanden):\n{lines}"
                 print(f"\n{AGENT_NAME}: {reply}")
-                chat_history.append({"role": "assistant", "content": reply})
                 continue
 
             # ---------------- STEP 1 ----------------
+            print(f"{AGENT_NAME}: tänker...")
             res = ollama.chat(
                 model=MODEL_NAME,
                 messages=[system] + chat_history,
@@ -892,6 +895,27 @@ def start_emelie():
 
                 if action == "spotify":
                     query = data.get("query", "")
+
+                    def is_music_question(user):
+                        u = user.lower()
+                        return (
+                            "spotify" in u and
+                            (
+                                "vilken" in u or
+                                "vad" in u or
+                                "spelar" in u or
+                                "låten" in u or
+                                "nu" in u or
+                                "?" in u
+                            )
+                        )
+
+                    if is_music_question(user):
+                        if current_track.get("query"):
+                            print(f"\n{AGENT_NAME}: Du spelar: {current_track['query']}")
+                        else:
+                            print(f"\n{AGENT_NAME}: Ingen låt spelas just nu.")
+                        continue
 
                     if any(x in user.lower() for x in play_keywords):
                         print(f"🎧 Spelar: {query}")
